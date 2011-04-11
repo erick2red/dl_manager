@@ -1,0 +1,44 @@
+* {
+    padding: 0;
+    margin: 0;
+    
+    font-family: 'Indie Flower', arial, serif;    
+}
+
+header {
+    background-color: transparent;
+    background-image: -moz-linear-gradient(center bottom , #D7D7D7, #E4E4E4);
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#D7D7D7), to(#E4E4E4));
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-attachment: scroll;
+    border-bottom: 1px solid #C6C6C6;
+    height: 46px;
+    
+    //TODO add gradient for ie
+    font-size: 1.2em;
+}
+
+header div.logo {
+    float: left    ;
+}
+
+header form {
+    float: right;
+}
+
+header form input {
+    padding: 4px;
+    
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    
+    background-color: #ccc;
+    border-style: solid;
+    border: 1px;
+    border-color: #7a7b7a;    
+}
+
+header div, header form {
+    display: inline-block;
+}
