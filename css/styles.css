@@ -1,8 +1,11 @@
+@font-face {  
+	font-family: Indie Flower;
+	src: url(IndieFlower.ttf ) format("truetype");
+}
+
 * {
     padding: 0;
     margin: 0;
-    
-    font-family: 'Indie Flower', arial, serif;    
 }
 
 header {
@@ -20,10 +23,14 @@ header {
 }
 
 header div.logo {
-    float: left    ;
+    margin: 8px;
+    float: left;
+    font-family: 'Indie Flower';
+    font-size: 1.4em;
 }
 
 header form {
+    margin: 10px;
     float: right;
 }
 
@@ -41,4 +48,8 @@ header form input {
 
 header div, header form {
     display: inline-block;
+}
+
+div.main {
+    clear: both;
 }
