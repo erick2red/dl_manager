@@ -1,6 +1,6 @@
 @font-face {  
-	font-family: Indie Flower;
-	src: url(IndieFlower.ttf ) format("truetype");
+	font-family: Piron;
+	src: url(piron.otf ) format("truetype");
 }
 
 * {
@@ -18,14 +18,13 @@ header {
     border-bottom: 1px solid #C6C6C6;
     height: 46px;
     
-    //TODO add gradient for ie
     font-size: 1.2em;
+    font-family: Piron;
 }
 
 header div.logo {
     margin: 8px;
     float: left;
-    font-family: 'Indie Flower';
     font-size: 1.4em;
 }
 
@@ -52,4 +51,85 @@ header div, header form {
 
 div.main {
     clear: both;
+	width: 960px;
+	background: white;
+	padding: 30px;
+}
+
+div.main table {
+    display: none;
+    width: 100%;
+    margin: 10px auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-shadow: 0 1px 0 #fff;
+    color: #2a2a2a;
+    background: #fafafa;  
+    background-image: -moz-linear-gradient(top, #fff, #eaeaea, #fff); /* Firefox 3.6 */
+    background-image: -webkit-gradient(linear,center bottom,center top,from(#fff),color-stop(0.5, #eaeaea),to(#fff)); 
+}
+
+div.main table td {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+    border-bottom: 1px solid #cdcdcd;
+    box-shadow: 0 1px 0 white;
+    -moz-box-shadow: 0 1px 0 white;
+    -webkit-box-shadow: 0 1px 0 white;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/*Body*/
+div.main table tbody td {
+    text-align: center;
+    font: normal 12px Verdana, Arial, Helvetica;
+    width: 150px;
+}
+
+div.main table tbody td:first-child {
+    width: auto;
+    text-align: left;
+}
+
+div.main table td:nth-child(2), div.main table td:nth-child(3) {
+    background: #efefef;
+    background: rgba(144,144,144,0.15);
+    border-right: 1px solid white;
+}
+
+
+div.main table td:nth-child(4) {
+    background: #e7f3d4;  
+    background: rgba(184,243,85,0.3);
+    cursor: pointer;
+}
+
+/*Header*/
+div.main table thead td {
+    font: bold 1.3em 'trebuchet MS', 'Lucida Sans', Arial;  
+    -moz-border-radius-topright: 10px;
+    -moz-border-radius-topleft: 10px; 
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top: 1px solid #eaeaea; 
+}
+
+div.main table thead td:first-child {
+    border-top: none;
+}
+
+/*Footer*/
+div.main table tfoot td {
+    font: bold 1.2em Verdana, Arial, Helvetica;  
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-radius-bottomleft: 10px; 
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom: 1px solid #dadada;
+}
+
+div.main table tfoot td:first-child {
+    border-bottom: none;
 }
