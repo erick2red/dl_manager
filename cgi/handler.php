@@ -37,15 +37,23 @@ class Receiver {
 		}
 		return $rvalues;
 	}
-/*	
-	function new_todo($params) {
-		$sql = 'INSERT INTO todos VALUES(NULL, "' . $params['todo'] . '", ' . $params['id_project'] . ', 0)';
+	function new_url($params) {
+		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', "undone", "' . $params['url'] . '", "some.mp4", 0)';
 		if($this->database->query($sql)) {
 			return true;
 		}
 		return false;
 	}
-	
+
+	function remove_url($params) {
+		$sql = 'DELETE FROM urls WHERE url_id=' . $params['url_id'];
+		if($this->database->query($sql)) {
+			return true;
+		}
+		return false;
+	}
+
+/*	
 	function set_done($params) {
 		$sql = 'UPDATE todos SET done=1 WHERE todo="' . $params['todo'] . '" and id_project=' . $params['id_project'];
 		if($this->database->query($sql)) {
@@ -54,16 +62,6 @@ class Receiver {
 		return false;
 	}
 
-	function remove($params) {
-		$sql = 'DELETE FROM todos WHERE todo="' . $params['todo'] . '" and id_project=' . $params['id_project'];
-		if($this->database->query($sql)) {
-			return true;
-		}
-		return false;
-	}
-	
-
-	
 	function new_project($params){
 		$sql = 'INSERT INTO projects VALUES(NULL, "' . $params['name'] . '")';
 		if($this->database->query($sql)) {

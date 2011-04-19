@@ -1,7 +1,73 @@
 $(function(){
     //styling
-    $('input:submit').css('padding', '4px 8px 4px 8px');
-    
+    $('input:submit').button();
+    $('div.new-url-ok')
+        .button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-circle-check'
+            }
+        })
+        .click(function(){
+            n_url = $('input.new-url').val();
+            if(/^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(n_url)) {
+                //calling ajax
+                $.ajax({
+                    url: 'cgi/handler.php',
+                    type: 'POST',
+                    data: {method: 'new_url', params: {user_id: window.localStorage.user_id, url: n_url}},
+                    dataType: 'json',
+                    success: function(data, textStatus, jqXHR){
+                        if(data) {
+                            $('div.new-url-dialog').slideUp('slow');
+                            update_urls_table();
+                        } else {
+                            //let see
+                        }
+                    }
+                });
+                $('input.new-url').val("");
+            } else {
+                $('body').toastmessage('showToast', {
+                   text: 'Invalid Url',
+                   sticky: false,
+                   position: 'bottom-right',
+                   type: 'error',
+                   stayTime: 2000
+                });
+                $('input.new-url').val("");
+            }            
+        })
+        .next().button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-circle-close'
+            }
+        })
+        .click(function(){
+            $('input.new-url').val("");
+            $('div.new-url-dialog').slideUp('slow');
+        });    
+
+    //setting button
+    $("div.new-url-btn")
+        .button()
+        .click(function() {
+           $('div.new-url-dialog').slideDown('slow');
+        })
+        .next()
+        .button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-document'
+            }
+        })
+        .click(function() {
+            alert( "This will implement the import from file" );
+        })
+        .parent()
+        .buttonset();
+                    
     var update_urls_table = function(){
         $('div.main table').show();
         $.ajax({
@@ -14,14 +80,37 @@ $(function(){
                 console.log(data);
                 rate = 0;
                 total_size = 0;
+                $('table>tbody>tr').remove();
+                $('table>tfoot>tr').remove();
                 for(i in data) {
-                    $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].url_id + '</td><td>' + data[i].status + '</td><td>' + data[i].address + '</td></tr>')
+                    $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + data[i].address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
+                    //adding remove button
+                    $('td>div#url_' + data[i].url_id)
+                        .button({
+                            text: false,
+                            icons: {
+                                primary: 'ui-icon-circle-close'
+                            }
+                        })
+                        .click(function(){
+                            $.ajax({
+                                url: 'cgi/handler.php',
+                                type: 'POST',
+                                data: {method: 'remove_url', params: {url_id: $(this).attr('id').substr(4)}},
+                                dataType: 'json',
+                                success: function(data, textStatus, jqXHR){
+                                    if(data) {
+                                        update_urls_table();
+                                    }
+                                }
+                            });
+                        });
                     data[i].status == 'done' && rate++; total_size += data[i].size;
                 }
-                $('table').append('<tfoot><td></td><td>' + data.length + '</td><td>' + rate + '/' + data.length + '</td><td>' + total_size + 'MB</td></tfoot>');
+                $('table').append('<tfoot><td></td><td>'+ rate + '/' + data.length + '</td><td>' + total_size + 'MB</td><td></td></tfoot>');
                 
                 //setting download handler
-                $('div.main table td:nth-child(4)').click(function(){
+                $('div.main table tbody td:nth-child(3)').click(function(){
                     //TODO add real download handler
                     $('body').toastmessage('showToast', {
                        text: 'Downloading ' + $(this).html(),
@@ -57,6 +146,10 @@ $(function(){
         //password is in window.localStorage.pass
         //setting submit to logout
         $('header form: input:submit').val('LogOut');
+        $('div.new-url-btn')
+            .button('option', 'disabled', false)
+            .next()
+            .button('option', 'disabled', false);
 
         $('div.login-box input').hide();
         $('div.pass-box input').hide();
@@ -68,6 +161,10 @@ $(function(){
         update_urls_table();
 	} else {
         //handling submit of the form
+        $('div.new-url-btn, div.new-url-btn')
+            .button('option', 'disabled', true)
+            .next()
+            .button('option', 'disabled', true);
         $('div.login-box input').show();
         $('div.pass-box input').show();
 
@@ -91,7 +188,11 @@ $(function(){
                             
                             $('header form').unbind('submit');
                             $('header form').submit(logout);
-                            
+
+                            $('div.new-url-btn')
+                                .button('option', 'disabled', false)
+                                .next()
+                                .button('option', 'disabled', false);                            
                             //fetching resuts
                             update_urls_table();
                         } else {

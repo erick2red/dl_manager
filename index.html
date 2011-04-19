@@ -4,23 +4,36 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="css/styles.css" />
         <link rel="stylesheet" href="css/jquery.toastmessage.css" />
+        <link rel="stylesheet" href="css/jquery-ui-1.8.11.custom.css" />
+        <title>Downloads Manager</title>
     </head>
     <body>
         <header>
             <div class="logo">Downloads Manager</div>
-            <form action="" method="post">
-                <div class="login-box"><input type="text" /></div>
-                <div class="pass-box"><input type="password" /></div>
-                <div class="login-btn"><input type="submit" value="Go" /></div>
-            </form>
+            <div class="left-side">
+                <div>
+                    <div class="new-url-btn">Add New</div>
+                    <div class="new-url-file">Import from file</div>
+                </div>
+                <form action="" method="post">
+                    <div class="login-box"><input type="text" /></div>
+                    <div class="pass-box"><input type="password" /></div>
+                    <div class="login-btn"><input type="submit" value="Go" /></div>
+                </form>
+            </div>    
         </header>
         <div class="main">
+            <div class="new-url-dialog">
+                    <input class="new-url" type="text" />
+                    <div class="new-url-ok"></div>
+                    <div class="new-url-cancel"></div>
+            </div>
             <table>
                 <thead><tr>
                     <td></td>
-                    <td>Id</td>
                     <td>Status</td>
                     <td>Download</td>
+                    <td>Delete</td>
                 </tr></thead>
                 <tbody></tbody>
             </table>
@@ -28,5 +41,6 @@
     </body> 
     <script type="text/javascript" src="js/jquery-1.5.2.min.js"></script>
     <script type="text/javascript" src="js/jquery.toastmessage.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.11.custom.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 </html>

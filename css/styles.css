@@ -3,14 +3,11 @@
 	src: url(piron.otf ) format("truetype");
 }
 
-@font-face {
-	font-family: Quattrocento;
-	src: url(Quattrocento-Regular.ttf ) format("truetype");
-}
-
 * {
     padding: 0;
     margin: 0;
+    
+    font-family: Arial;
 }
 
 header {
@@ -22,32 +19,33 @@ header {
     background-attachment: scroll;
     border-bottom: 1px solid #C6C6C6;
     height: 46px;
-    
-    font-size: 1.2em;
-    font-family: Piron;
 }
 
 header div.logo {
     margin: 8px;
     float: left;
     font-size: 1.4em;
+    font-family: Piron;
 }
 
-header form {
-    margin: 10px;
+header div.left-side {
+    margin: 8px;
     float: right;
 }
 
 header form input {
-    padding: 4px;
+   line-height: 1.4em;
+    padding: .4em 1em;
     
-    border-radius: 8px;
-    -moz-border-radius: 8px;
+    border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
     
-    background-color: #ccc;
+    background: #F6F6F6 url(images/ui-bg_glass_100_f6f6f6_1x400.png) 50% 50% repeat-x;
     border-style: solid;
     border: 1px;
-    border-color: #7a7b7a;    
+    border-color: #CCC;
+    
+    font-size: 0.8em;
 }
 
 header div, header form {
@@ -58,8 +56,7 @@ div.main {
     clear: both;
 	width: 960px;
 	background: white;
-	padding: 30px;
-	font-family: Quattrocento;
+	padding: 0 30px 30px 30px;
 }
 
 div.main table {
@@ -90,7 +87,7 @@ div.main table td {
 /*Body*/
 div.main table tbody td {
     text-align: center;
-    font: normal 12px;
+    font: normal 1em;
     width: 150px;
 }
 
@@ -100,16 +97,20 @@ div.main table tbody td:first-child {
 }
 
 div.main table td:nth-child(2), div.main table td:nth-child(3) {
-    background: #efefef;
-    background: rgba(144,144,144,0.15);
+    background: #e7f3d4;  
+    background: rgba(184,243,85,0.3);
     border-right: 1px solid white;
 }
 
+div.main table tbody td:nth-child(3) {
+    cursor: pointer;    
+}
 
 div.main table td:nth-child(4) {
-    background: #e7f3d4;  
-    background: rgba(184,243,85,0.3);
-    cursor: pointer;
+    width: 50px;
+    background: #efefef;
+    background: rgba(144,144,144,0.15);
+    border-right: 1px solid white;
 }
 
 /*Header*/
@@ -138,4 +139,36 @@ div.main table tfoot td {
 
 div.main table tfoot td:first-child {
     border-bottom: none;
+}
+
+div.new-url-dialog {
+    margin: .5em auto;
+    padding: 2em;
+    padding-top: 1.8em;
+    padding-right: 1em;
+    width: 85%;
+    vertical-align: middle;
+
+    background: rgba(184,243,85,0.3);
+    border: 1px solid grey;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    display: none;
+}
+
+div.new-url-dialog * {
+    vertical-align: middle;
+/*    display: none;*/
+}
+
+input.new-url {
+    padding: .8em;
+    width: 50em;
+    background: rgba(144,144,144,0.15);
+    border: 1px solid white;
+    border-radius: 10px; 
+}
+
+div.new-url-ok, div.new-url-cancel {
+    padding: .9em .4em;
 }
