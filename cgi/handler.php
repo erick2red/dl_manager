@@ -10,6 +10,22 @@
 		wget
 		youtube-dl
 */
+function get_remote_size(){
+$ch = curl_init();
+curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt ($ch, CURLOPT_URL, 'http://techreport.com/podcast/trpodcast_ep085.m4a');
+curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 20);
+curl_setopt ($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+
+// Only calling the head
+curl_setopt($ch, CURLOPT_HEADER, true); // header will be at output
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD'); // HTTP request is 'HEAD'
+
+$content = curl_exec ($ch);
+curl_close ($ch);
+
+print_r($content);	
+}
 
 class Receiver {
 	function __construct() {
@@ -38,7 +54,8 @@ class Receiver {
 		return $rvalues;
 	}
 	function new_url($params) {
-		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', "undone", "' . $params['url'] . '", "some.mp4", 0)';
+		$file = substr($params['url'], strrpos($params['url'], '/') + 1);
+		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', "undone", "' . $params['url'] . '", "' . $file . '", 0)';
 		if($this->database->query($sql)) {
 			return true;
 		}

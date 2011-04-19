@@ -1,0 +1,43 @@
+#!/usr/bin/python
+
+#### for now it will only download my urls
+
+#### configuration ####
+start_hour = 16
+start_min = 9
+database_path = '/home/erick/Sites/download_manager/data/db.sqlite'
+
+import os
+from datetime import datetime, time
+from time import sleep
+import sqlite3
+
+def fetch_urls(user):
+	rl = []
+	conn = sqlite3.connect(database_path)
+	c = conn.cursor()
+	### here it goes how to detect user_id
+	user_id = 1
+	c.execute('select * from urls where user_id=' + str(user_id))
+	for row in c:
+		# id user_id
+		# 2, 1, 'done', 'http://techreport.com/podcast/trpodcast_ep085.m4a', 'my_file.mp4', 52)
+		print(row)
+		if row[2] == 'undone':
+			rl += [row[0], row[3]]
+			
+
+if __name__ == '__main__':
+	while True:
+#		if datetime.now().time() >= time(start_hour, start_min) and datetime.now().time() <= time(start_hour, start_min + 1):
+		#debug purposes
+		if True:
+			print('Starting *******************')
+			urls = fetch_urls('erick')
+		else:
+			print('datetime: ' + str(datetime.now().time()))
+			print('time: ' + str(time(start_hour, start_min)))
+		sleep(30)
+
+	
+
