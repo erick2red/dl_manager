@@ -86,17 +86,13 @@ $(function(){
                     $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + data[i].address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)
-                        .button({
-                            text: false,
-                            icons: {
-                                primary: 'ui-icon-circle-close'
-                            }
-                        })
+                        .addClass('ui-icon ui-icon-circle-close')
+                        .parent()
                         .click(function(){
                             $.ajax({
                                 url: 'cgi/handler.php',
                                 type: 'POST',
-                                data: {method: 'remove_url', params: {url_id: $(this).attr('id').substr(4)}},
+                                data: {method: 'remove_url', params: {url_id: $('div', $(this)).attr('id').substr(4)}},
                                 dataType: 'json',
                                 success: function(data, textStatus, jqXHR){
                                     if(data) {
@@ -104,7 +100,8 @@ $(function(){
                                     }
                                 }
                             });
-                        });
+                        })
+                        .css('padding-left', '42px');
                     data[i].status == 'done' && rate++; total_size += data[i].size;
                 }
                 $('table').append('<tfoot><td></td><td>'+ rate + '/' + data.length + '</td><td>' + total_size + 'MB</td><td></td></tfoot>');

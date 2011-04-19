@@ -107,7 +107,8 @@ div.main table tbody td:nth-child(3) {
 }
 
 div.main table td:nth-child(4) {
-    width: 50px;
+    cursor: pointer;
+    width: 40px;
     background: #efefef;
     background: rgba(144,144,144,0.15);
     border-right: 1px solid white;
