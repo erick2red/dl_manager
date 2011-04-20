@@ -1,31 +1,23 @@
 <?php
-/*
-	url status:
-		done
-		undone
-		error
-	url size:
-		in MB
-	url handlers
-		wget
-		youtube-dl
+/**
+ *	@author Erick Pérez Castellanos <erick.red@gmail.com>
+ *
+ *	Dependencies:
+ *		json php extension
+ *		curl php extension
+ *		sqlite3 php extension
+ *
+ *	Notes
+ *	url status:
+ *		done
+ *		undone
+ *		error
+ *	url size:
+ *		in MB
+ *	url handlers:
+ *		wget
+ *		youtube-dl
 */
-function get_remote_size(){
-$ch = curl_init();
-curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt ($ch, CURLOPT_URL, 'http://techreport.com/podcast/trpodcast_ep085.m4a');
-curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 20);
-curl_setopt ($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-
-// Only calling the head
-curl_setopt($ch, CURLOPT_HEADER, true); // header will be at output
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD'); // HTTP request is 'HEAD'
-
-$content = curl_exec ($ch);
-curl_close ($ch);
-
-print_r($content);	
-}
 
 class Receiver {
 	function __construct() {
@@ -49,7 +41,9 @@ class Receiver {
 		$results = $this->database->query('SELECT * FROM urls WHERE user_id=' . $params['user_id']);
 		$rvalues = array();
 		while ($row = $results->fetchArray()) {
-			$rvalues[] = array('url_id' => $row['url_id'], 'url' => $row['url'], 'url' => $row['url'], 'status' => $row['status'], 'address' => $row['address'], 'size' => $row['size']);
+			$local_address = str_replace(dirname(getcwd()) . '/', '', $row['address']);
+//			$local_address = getcwd();
+			$rvalues[] = array('url_id' => $row['url_id'], 'url' => $row['url'], 'url' => $row['url'], 'status' => $row['status'], 'address' => $local_address, 'size' => $row['size']);
 		}
 		return $rvalues;
 	}
@@ -69,24 +63,6 @@ class Receiver {
 		}
 		return false;
 	}
-
-/*	
-	function set_done($params) {
-		$sql = 'UPDATE todos SET done=1 WHERE todo="' . $params['todo'] . '" and id_project=' . $params['id_project'];
-		if($this->database->query($sql)) {
-			return true;
-		}
-		return false;
-	}
-
-	function new_project($params){
-		$sql = 'INSERT INTO projects VALUES(NULL, "' . $params['name'] . '")';
-		if($this->database->query($sql)) {
-			return $this->database->querySingle('SELECT id_project FROM projects WHERE name="' . $params['name'] . '"');
-		}
-		return 0;
-	}
-*/	
 }
 
 $obj = new Receiver();

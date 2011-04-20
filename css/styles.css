@@ -54,7 +54,7 @@ header div, header form {
 
 div.main {
     clear: both;
-	width: 960px;
+	width: 85%;
 	background: white;
 	padding: 0 30px 30px 30px;
 }
@@ -147,7 +147,7 @@ div.new-url-dialog {
     padding: 2em;
     padding-top: 1.8em;
     padding-right: 1em;
-    width: 85%;
+    width: 50em;
     vertical-align: middle;
 
     background: rgba(184,243,85,0.3);

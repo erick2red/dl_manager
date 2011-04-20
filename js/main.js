@@ -83,7 +83,8 @@ $(function(){
                 $('table>tbody>tr').remove();
                 $('table>tfoot>tr').remove();
                 for(i in data) {
-                    $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + data[i].address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
+					address = data[i].status == 'done' ? '<a href="' + data[i].address + '">' + data[i].address.substr(data[i].address.lastIndexOf('/') + 1) + '</a>' : '-';
+                    $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)
                         .addClass('ui-icon ui-icon-circle-close')
