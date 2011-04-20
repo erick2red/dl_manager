@@ -17,6 +17,8 @@
  *	url handlers:
  *		wget
  *		youtube-dl
+ *	url user pass:
+ *		md5 hash
 */
 
 class Receiver {
