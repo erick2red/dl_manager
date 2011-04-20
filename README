@@ -10,3 +10,8 @@ Out of my memory
 apache/php and some php extensions
 youtube-dl for downloading youtube videos
 curl and sqlite3
+
+================= TODO =================
+1. Add url description
+2. Add url file type
+3. Add user/pass to url
