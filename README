@@ -1,0 +1,12 @@
+================= dl_manager =================
+The best way of describe it is using it.
+With it you can:
+1. Add new url to be downloaded on the server.
+2. Retrieve the downloaded files.
+3. Remove the urls you want.
+
+So far has some requirements I will list later.
+Out of my memory
+apache/php and some php extensions
+youtube-dl for downloading youtube videos
+curl and sqlite3
