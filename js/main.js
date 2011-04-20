@@ -157,6 +157,8 @@ $(function(){
         $('body div.main table').show();
         
         update_urls_table();
+        setInterval(update_urls_table, 300000);
+        
 	} else {
         //handling submit of the form
         $('div.new-url-btn, div.new-url-btn')
@@ -193,6 +195,8 @@ $(function(){
                                 .button('option', 'disabled', false);                            
                             //fetching resuts
                             update_urls_table();
+                            setInterval(update_urls_table, 300000);
+                            
                         } else {
                             //show notification
                             console.log('Here');

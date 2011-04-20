@@ -173,3 +173,13 @@ input.new-url {
 div.new-url-ok, div.new-url-cancel {
     padding: .9em .4em;
 }
+
+/* styling links */
+a {
+    text-decoration: none;
+    color: darkgreen;
+}
+
+a:hover {
+    text-shadow: 1px 1px 1px rgba(0,0,0,.2);
+}

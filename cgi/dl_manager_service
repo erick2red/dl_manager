@@ -5,14 +5,30 @@
 #### configuration ####
 start_hour = 16
 start_min = 9
-database_path = '/home/erick/Sites/dl_manager/data/db.sqlite'
-download_files_path = "/home/erick/Sites/dl_manager/dl_files"
+database_path = '/home/erick/Sites/download_manager/data/db.sqlite'
+download_files_path = "/home/erick/Sites/download_manager/dl_files"
 log_file = '/var/log/dl_manager_service.log'
+handlers = []
 
 import os
+import stat
 from time import sleep
 import sqlite3
 import urllib.request
+import re
+from subprocess import *
+
+def get_handlers():
+	rl = []
+	conn = sqlite3.connect(database_path)
+	c = conn.cursor()
+	### here it goes how to detect user_id
+	user_id = 1
+	c.execute('select handler,url_regex from handlers')
+	for row in c:
+		rl += [(row[0], re.compile(row[1]))]
+	c.close()
+	return rl
 
 def fetch_urls(user):
 	rl = []
@@ -28,6 +44,8 @@ def fetch_urls(user):
 	return rl
 
 def set_done(url_id, address):
+	#changing permissions of the dowloaded file
+	os.chmod(address, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
 	conn = sqlite3.connect(database_path)
 	c = conn.cursor()
 	size = os.stat(address).st_size / (1024*1024)
@@ -36,24 +54,44 @@ def set_done(url_id, address):
 	c.close()
 
 def download(url, filename):
-	try:
-		dfile_name = os.path.join(download_files_path, filename)
-		dfile = urllib.request.urlretrieve(url, dfile_name + '.part')
-		os.rename(dfile_name + '.part', dfile_name)
-		return dfile_name
-	except Exception as e:
-		os.remove(dfile_name + '.part')
-		return None
+	dler = "default"
+	for i in handlers:
+		if i[1].match(url):
+			dler = i[0]
+			break
+	if dler == 'youtube-dl':
+		os.chdir(download_files_path)
+		rt = os.system('youtube-dl ' + url)
+		if rt == 0:
+			p = Popen('youtube-dl ' + url + ' --get-filename', stdout=PIPE, shell=True)
+			sts = os.waitpid(p.pid, 0)[1]
+			output = p.stdout.readlines()
+			filename = output[0].decode('utf_8')[:-1]
+			dfile_name = os.path.join(download_files_path, filename)
+			return dfile_name
+		else:
+			return None
+	else:
+		try:
+			dfile_name = os.path.join(download_files_path, filename)
+			dfile = urllib.request.urlretrieve(url, dfile_name + '.part')
+			os.rename(dfile_name + '.part', dfile_name)
+			return dfile_name
+		except Exception as e:
+			os.remove(dfile_name + '.part')
+			return None
 
 if __name__ == '__main__':
+	handlers = get_handlers()
 	while True:
 		urls = fetch_urls('erick')
-		print(urls)
 		for i in urls:
+			print('Got url: ' + i[1])
 			returned_value = download(i[1], i[2])
 			if returned_value != None:
 				#success
 				set_done(i[0], returned_value)
+		print('Waiting for urls')
 		sleep(300)
 
 	

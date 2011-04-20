@@ -42,7 +42,6 @@ class Receiver {
 		$rvalues = array();
 		while ($row = $results->fetchArray()) {
 			$local_address = str_replace(dirname(getcwd()) . '/', '', $row['address']);
-//			$local_address = getcwd();
 			$rvalues[] = array('url_id' => $row['url_id'], 'url' => $row['url'], 'url' => $row['url'], 'status' => $row['status'], 'address' => $local_address, 'size' => $row['size']);
 		}
 		return $rvalues;
@@ -57,8 +56,11 @@ class Receiver {
 	}
 
 	function remove_url($params) {
+		$filename = $this->database->querySingle('SELECT address FROM urls WHERE url_id=' . $params['url_id']);
 		$sql = 'DELETE FROM urls WHERE url_id=' . $params['url_id'];
 		if($this->database->query($sql)) {
+			//removing file
+			unlink($filename);
 			return true;
 		}
 		return false;
