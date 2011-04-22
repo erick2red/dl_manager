@@ -1,17 +1,33 @@
-================= dl_manager =================
-The best way of describe it is using it.
-With it you can:
-1. Add new url to be downloaded on the server.
-2. Retrieve the downloaded files.
-3. Remove the urls you want.
-
-So far has some requirements I will list later.
-Out of my memory
-apache/php and some php extensions
-youtube-dl for downloading youtube videos
-curl and sqlite3
-
-================= TODO =================
-1. Add url description
-2. Add url file type
-3. Add user/pass to url
+<head>
+    <title>================= dl_manager =================</title>
+</head>
+<body>
+    <section>
+        <p>What is this:</p>
+        <p>The best way of describe it is using it. <br/>With it you can: <ul>
+            <li>Add new url to be downloaded on the server.</li>
+            <li>Retrieve the downloaded files.</li>
+            <li>Remove the urls you want.</li>
+        </ul></p>
+    </section>
+    <section><p>Requirements</p>
+    <p><ul>
+        <li>Apache</li>
+        <li>PHP (php extensions: json, curl, sqlite3)</li>
+        <li>Python3 (Here I said Python3 cause I made with Python3 not cause I rely on any particular feature not available in previous versions. You will need to migrate dl_manager_service script if want to use Python2)</li>
+        <li>Python3 modules: sqlite3, re, urllib, os, subprocess (I do know this are core python modules, but ...)</li>
+        <li><a href="http://rg3.github.com/youtube-dl/">youtube-dl</a> to download video from youtube</li>
+    </ul></p></section>
+    <section>
+        <p>TODO</p>
+        <p><ul>
+            <li>Add max-quality option to youtube-dl download</li>
+            <li>Add description to url</li>
+            <li>Add file type to download</li>
+            <li>Add user/pass to url</li>
+        </ul></p>
+        <p><ul>
+            <li>Add configuration script. Autodetection of php extensions/python modules and so on.</li>
+        </ul></p>
+    </section>
+</body>
