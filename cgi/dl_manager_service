@@ -53,7 +53,7 @@ def set_done(url_id, address):
 	conn.commit()
 	c.close()
 
-def download(url, filename):
+def download(url, filename, logger):
 	dler = "default"
 	for i in handlers:
 		if i[1].match(url):
@@ -61,16 +61,22 @@ def download(url, filename):
 			break
 	if dler == 'youtube-dl':
 		os.chdir(download_files_path)
-		rt = os.system('youtube-dl ' + url)
-		if rt == 0:
-			p = Popen('youtube-dl ' + url + ' --get-filename', stdout=PIPE, shell=True)
-			sts = os.waitpid(p.pid, 0)[1]
-			output = p.stdout.readlines()
-			filename = output[0].decode('utf_8')[:-1]
-			dfile_name = os.path.join(download_files_path, filename)
-			return dfile_name
-		else:
-			return None
+		try:
+			retcode = call('youtube-dl ' + url, shell=True, stdout=logger, stderr=logger)
+			flog.flush()
+			if retcode != 0:
+				print('Child "youtube-dl ' + url + '" was terminated by with return code ', -retcode, file=logger)
+				return None
+			else:
+				p = Popen('youtube-dl ' + url + ' --get-filename', stdout=PIPE, shell=True)
+				sts = os.waitpid(p.pid, 0)[1]
+				output = p.stdout.readlines()
+				filename = output[0].decode('utf_8')[:-1]
+				dfile_name = os.path.join(download_files_path, filename)
+				return dfile_name
+		except OSError as e:
+			print("Execution failed:", e, file=logger)
+			flog.flush()
 	else:
 		try:
 			dfile_name = os.path.join(download_files_path, filename)
@@ -83,15 +89,20 @@ def download(url, filename):
 
 if __name__ == '__main__':
 	handlers = get_handlers()
+	try:
+		flog = open(log_file, 'w')
+	except IOError as e:
+		exit(-1)
 	while True:
 		urls = fetch_urls('erick')
 		for i in urls:
-			print('Got url: ' + i[1])
-			returned_value = download(i[1], i[2])
+			print('Got url: ' + i[1], file=flog)
+			flog.flush()
+			returned_value = download(i[1], i[2], flog)
 			if returned_value != None:
 				#success
 				set_done(i[0], returned_value)
-		print('Waiting for urls')
+		print('Waiting for urls', file=flog)
+		flog.flush()
 		sleep(300)
 
-	
