@@ -83,7 +83,7 @@ $(function(){
                 $('table>tbody>tr').remove();
                 $('table>tfoot>tr').remove();
                 for(i in data) {
-					address = data[i].status == 'done' ? '<a href="' + data[i].address + '">' + data[i].address.substr(data[i].address.lastIndexOf('/') + 1) + '</a>' : '-';
+					address = data[i].status == 'done' ? data[i].address.substr(data[i].address.lastIndexOf('/') + 1).link(escape(data[i].address)) : '-';
                     $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)
