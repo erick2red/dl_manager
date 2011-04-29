@@ -7,7 +7,6 @@ start_hour = 16
 start_min = 9
 database_path = '/home/erick/Sites/download_manager/data/db.sqlite'
 download_files_path = "/home/erick/Sites/download_manager/dl_files"
-log_file = '/var/log/dl_manager_service.log'
 handlers = []
 
 import os
@@ -53,7 +52,7 @@ def set_done(url_id, address):
 	conn.commit()
 	c.close()
 
-def download(url, filename, logger):
+def download(url, filename):
 	dler = "default"
 	for i in handlers:
 		if i[1].match(url):
@@ -62,8 +61,7 @@ def download(url, filename, logger):
 	if dler == 'youtube-dl':
 		os.chdir(download_files_path)
 		try:
-			retcode = call('youtube-dl ' + url, shell=True, stdout=logger, stderr=logger)
-			flog.flush()
+			retcode = call('youtube-dl ' + url, shell=True)
 			if retcode != 0:
 				print('Child "youtube-dl ' + url + '" was terminated by with return code ', -retcode, file=logger)
 				return None
@@ -76,7 +74,6 @@ def download(url, filename, logger):
 				return dfile_name
 		except OSError as e:
 			print("Execution failed:", e, file=logger)
-			flog.flush()
 	else:
 		try:
 			dfile_name = os.path.join(download_files_path, filename)
@@ -89,20 +86,14 @@ def download(url, filename, logger):
 
 if __name__ == '__main__':
 	handlers = get_handlers()
-	try:
-		flog = open(log_file, 'w')
-	except IOError as e:
-		exit(-1)
 	while True:
 		urls = fetch_urls('erick')
 		for i in urls:
-			print('Got url: ' + i[1], file=flog)
-			flog.flush()
-			returned_value = download(i[1], i[2], flog)
+			print('Got url: ' + i[1])
+			returned_value = download(i[1], i[2])
 			if returned_value != None:
 				#success
 				set_done(i[0], returned_value)
-		print('Waiting for urls', file=flog)
-		flog.flush()
+		print('Waiting for urls')
 		sleep(300)
 

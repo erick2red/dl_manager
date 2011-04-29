@@ -1,6 +1,6 @@
 @font-face {
 	font-family: Piron;
-	src: url(piron.otf ) format("truetype");
+	src: url(piron.otf );
 }
 
 * {
@@ -92,7 +92,7 @@ div.main table tbody td {
 }
 
 div.main table tbody td:first-child {
-    width: auto;
+    width: 100%;
     text-align: left;
 }
 

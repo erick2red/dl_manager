@@ -85,6 +85,8 @@ $(function(){
                 for(i in data) {
 					address = data[i].status == 'done' ? data[i].address.substr(data[i].address.lastIndexOf('/') + 1).link(escape(data[i].address)) : '-';
                     $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
+                    $('table>tbody>tr:last>td:first').ellipsis({size: 45, expand: false});
+                    $('table>tbody>tr:last>td:has(a) a').ellipsis({size: 40, expand: false});
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)
                         .addClass('ui-icon ui-icon-circle-close')
