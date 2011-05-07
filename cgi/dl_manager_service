@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 #### for now it will only download my urls
 
@@ -11,9 +11,10 @@ handlers = []
 
 import os
 import stat
+import sys
 from time import sleep
 import sqlite3
-import urllib.request
+import pycurl
 import re
 from subprocess import *
 
@@ -35,24 +36,27 @@ def fetch_urls(user):
 	c = conn.cursor()
 	### here it goes how to detect user_id
 	user_id = 1
-	c.execute('select * from urls where user_id=' + str(user_id))
+	c.execute('select * from urls where user_id=' + str(user_id) + ' and status!=100')
 	for row in c:
-		if row[2] == 'undone':
-			rl += [(row[0], row[3], row[4])]
+		rl += [(row[0], row[3], row[4])]
 	c.close()
 	return rl
 
-def set_done(url_id, address):
-	#changing permissions of the dowloaded file
-	os.chmod(address, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+def update_progress(url_id, url, progress, address):
+	if progress == 100:
+		#changing permissions of the dowloaded file
+		os.chmod(address, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+		size = os.stat(address).st_size / (1024*1024)
+	else:
+		size = 0
 	conn = sqlite3.connect(database_path)
 	c = conn.cursor()
 	size = os.stat(address).st_size / (1024*1024)
-	c.execute('UPDATE urls SET status="done",address="' + address + '",size=' + str(size) + ' WHERE url_id=' + str(url_id))
+	c.execute('UPDATE urls SET status=' + str(progress) + ' ,address="' + address + '",size=' + str(size) + ' WHERE url_id=' + str(url_id))
 	conn.commit()
 	c.close()
 
-def download(url, filename):
+def download(url_id, url, filename):
 	dler = "default"
 	for i in handlers:
 		if i[1].match(url):
@@ -63,7 +67,7 @@ def download(url, filename):
 		try:
 			retcode = call('youtube-dl ' + url, shell=True)
 			if retcode != 0:
-				print('Child "youtube-dl ' + url + '" was terminated by with return code ', -retcode, file=logger)
+				print('Child "youtube-dl ' + url + '" was terminated by with return code ', -retcode)
 				return None
 			else:
 				p = Popen('youtube-dl ' + url + ' --get-filename', stdout=PIPE, shell=True)
@@ -73,15 +77,35 @@ def download(url, filename):
 				dfile_name = os.path.join(download_files_path, filename)
 				return dfile_name
 		except OSError as e:
-			print("Execution failed:", e, file=logger)
+			print("Execution failed:", e)
 	else:
 		try:
 			dfile_name = os.path.join(download_files_path, filename)
-			dfile = urllib.request.urlretrieve(url, dfile_name + '.part')
+
+			fp = open(dfile_name + '.part', "wb")
+			curl = pycurl.Curl()
+			curl.setopt(pycurl.FOLLOWLOCATION, 1)
+			curl.setopt(pycurl.MAXREDIRS, 5)
+			curl.setopt(pycurl.CONNECTTIMEOUT, 30)
+			curl.setopt(pycurl.TIMEOUT, 300)
+			curl.setopt(pycurl.WRITEDATA, fp)
+			curl.setopt(pycurl.URL, str(url))
+			try:
+				curl.perform()
+			except:
+				import traceback
+				traceback.print_exc(file=sys.stderr)
+				sys.stderr.flush()
+			curl.close()
+			fp.close()
 			os.rename(dfile_name + '.part', dfile_name)
 			return dfile_name
 		except Exception as e:
-			os.remove(dfile_name + '.part')
+			print('Error: ' + e.__str__())
+			print('url: ' + url)
+			print('pycurl.URL: ' + pycurl.URL.__str__())
+			if os.path.exists(dfile_name + '.part'):
+				os.remove(dfile_name + '.part')
 			return None
 
 if __name__ == '__main__':
@@ -90,10 +114,10 @@ if __name__ == '__main__':
 		urls = fetch_urls('erick')
 		for i in urls:
 			print('Got url: ' + i[1])
-			returned_value = download(i[1], i[2])
+			returned_value = download(i[0], i[1], i[2])
 			if returned_value != None:
 				#success
-				set_done(i[0], returned_value)
+				 update_progress(i[0], i[1], 100, returned_value)
 		print('Waiting for urls')
-		sleep(300)
+		sleep(30)
 
