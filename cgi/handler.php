@@ -50,7 +50,7 @@ class Receiver {
 	}
 	function new_url($params) {
 		$file = substr($params['url'], strrpos($params['url'], '/') + 1);
-		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', "undone", "' . $params['url'] . '", "' . $file . '", 0)';
+		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', 0, "' . $params['url'] . '", "' . $file . '", 0, 0)';
 		if($this->database->query($sql)) {
 			return true;
 		}

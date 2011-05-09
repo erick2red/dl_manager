@@ -7,6 +7,7 @@ start_hour = 16
 start_min = 9
 database_path = '/home/erick/Sites/download_manager/data/db.sqlite'
 download_files_path = "/home/erick/Sites/download_manager/dl_files"
+max_average_speed = 0 #bytes
 handlers = []
 
 import os
@@ -38,7 +39,12 @@ def fetch_urls(user):
 	user_id = 1
 	c.execute('select * from urls where user_id=' + str(user_id) + ' and status!=100')
 	for row in c:
-		rl += [(row[0], row[3], row[4])]
+		#(1, 1, 0, u'http://localhost/~erick/phpinfo.php', u'phpinfo.php', 0, 0))
+		# row[0] -> url_id
+		# row[3] -> url
+		# row[4] -> address
+		# row[6] -> bw_limit
+		rl += [(row[0], row[3], row[4], row[6])]
 	c.close()
 	return rl
 
@@ -56,7 +62,7 @@ def update_progress(url_id, url, progress, address):
 	conn.commit()
 	c.close()
 
-def download(url_id, url, filename):
+def download(url_id, url, filename, bw_limit):
 	dler = "default"
 	for i in handlers:
 		if i[1].match(url):
@@ -88,6 +94,10 @@ def download(url_id, url, filename):
 			curl.setopt(pycurl.MAXREDIRS, 5)
 			curl.setopt(pycurl.CONNECTTIMEOUT, 30)
 			curl.setopt(pycurl.TIMEOUT, 300)
+			if bw_limit != 0:
+				curl.setopt(pycurl.MAX_RECV_SPEED_LARGE, bw_limit)
+			elif max_average_speed != 0:
+				curl.setopt(pycurl.MAX_RECV_SPEED_LARGE, max_average_speed)
 			curl.setopt(pycurl.WRITEDATA, fp)
 			curl.setopt(pycurl.URL, str(url))
 			try:
@@ -114,7 +124,7 @@ if __name__ == '__main__':
 		urls = fetch_urls('erick')
 		for i in urls:
 			print('Got url: ' + i[1])
-			returned_value = download(i[0], i[1], i[2])
+			returned_value = download(i[0], i[1], i[2], i[3])
 			if returned_value != None:
 				#success
 				 update_progress(i[0], i[1], 100, returned_value)

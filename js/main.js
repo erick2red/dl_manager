@@ -104,7 +104,8 @@ $(function(){
                 $('input.new-url').val("");
             }            
         })
-        .next().button({
+        .next()
+		.button({
             text: false,
             icons: {
                 primary: 'ui-icon-circle-close'
@@ -131,9 +132,46 @@ $(function(){
         .click(function() {
             alert( "This will implement the import from file" );
         })
+		.css('margin-left', '-1px')
         .parent()
         .buttonset();
-                    
+    
+	//setting more options button
+	$('div.more-options')
+        .button({
+            text: false,
+            icons: {
+                primary: 'ui-icon-circle-plus'
+            }
+        })
+		.hover(function(){
+				$(this)
+					.prev()
+					.css('border-color', '#999999');
+			},function(){
+				$(this)
+					.prev()
+					.css('border-color', 'lightGrey');
+			})
+		.click(function(){
+			$('div.other-options').slideDown('fast');
+		})
+		.prev()
+		.hover(function(){
+				$(this)
+					.css('border-color', '#999999')
+					.next()
+					.addClass('ui-state-hover');
+			},function(){
+				$(this)
+					.css('border-color', 'lightGrey')
+					.next()
+					.removeClass('ui-state-hover');
+			}
+		)
+		.parent()
+		.addClass('ui-widget');
+	
     var update_urls_table = function(){
         $('div.main table').show();
         $.ajax({
@@ -149,7 +187,7 @@ $(function(){
                 $('table>tbody>tr').remove();
                 $('table>tfoot>tr').remove();
                 for(i in data) {
-					address = data[i].status == 'done' ? data[i].address.substr(data[i].address.lastIndexOf('/') + 1).link(escape(data[i].address)) : '-';
+					address = data[i].status == '100' ? data[i].address.substr(data[i].address.lastIndexOf('/') + 1).link(escape(data[i].address)) : '-';
                     $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
                     $('table>tbody>tr:last>td:first').ellipsis({size: 45, expand: false});
                     $('table>tbody>tr:last>td:has(a) a').ellipsis({size: 40, expand: false});
