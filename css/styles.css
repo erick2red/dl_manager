@@ -79,17 +79,16 @@ header div.left-side {
     float: right;
 }
 
-header form input {
-   line-height: 1.4em;
+header form input, header div.new-url-btn, header div.new-url-file {
+	cursor: pointer;
+    line-height: 1.4em;
     padding: .4em 1em;
     
     border-radius: 0.4em;
     -moz-border-radius: 0.4em;
     
-    background: #F6F6F6 url(images/ui-bg_glass_100_f6f6f6_1x400.png) 50% 50% repeat-x;
-    border-style: solid;
-    border: 1px;
-    border-color: #CCC;
+    background: #F6F6F6 50% 50% repeat-x;
+    border: 2px solid black;
     
     font-size: 0.8em;
 }
@@ -205,7 +204,6 @@ div.new-url-dialog {
 }
 
 div.new-url {
-	width: 85%;
     background: rgba(144, 144, 144, 0.15);
     border: 1px solid white;
     border-radius: 10px;
@@ -217,28 +215,48 @@ div.new-url * {
 	vertical-align: middle;
 }
 
+input.new-url, div.more-options {
+	display: inline-block;
+	padding: .9em .4em;
+    
+	cursor: pointer;
+    line-height: 1.4em;
+    padding: .4em 1em;
+    
+    border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    
+    background: #F6F6F6 50% 50% repeat-x;
+    border: 2px solid black;
+    
+    font-size: 0.8em;    
+}
+
 input.new-url {
-	margin-right: 0;
-    padding: .7em;
-    width: 94%;
-	margin-left: auto;
-	margin-right: 0;
-	background: rgba(144, 144, 144, 0.15);
-    border: 1px solid lightGrey;
     border-radius: 10px 0 0 10px;
 	-moz-border-radius: 10px 0 0 10px;
 }
 
 div.more-options {
-	margin-left: -5px;
-	padding: .95em .2em;
-	border-radius: 0 10px 10px 0;
+    border-radius: 0 10px 10px 0;
 	-moz-border-radius: 0 10px 10px 0;
 }
 
 div.new-url-ok, div.new-url-cancel {
 	display: inline-block;
 	padding: .9em .4em;
+    
+	cursor: pointer;
+    line-height: 1.4em;
+    padding: .4em 1em;
+    
+    border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    
+    background: #F6F6F6 50% 50% repeat-x;
+    border: 2px solid black;
+    
+    font-size: 0.8em;    
 }
 
 div.other-options {
