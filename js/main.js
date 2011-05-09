@@ -66,14 +66,7 @@ $(function(){
 	dropZone.addEventListener('drop', handleFileSelect, false);
   
     //styling
-    $('input:submit').button();
     $('div.new-url-ok')
-        .button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-circle-check'
-            }
-        })
         .click(function(){
             n_url = $('input.new-url').val();
             if(parse_url.test(n_url)) {
@@ -105,12 +98,6 @@ $(function(){
             }            
         })
         .next()
-		.button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-circle-close'
-            }
-        })
         .click(function(){
             $('input.new-url').val("");
             $('div.new-url-dialog').slideUp('slow');
@@ -118,32 +105,17 @@ $(function(){
 
     //setting button
     $("div.new-url-btn")
-        .button()
         .click(function() {
            $('div.new-url-dialog').slideDown('slow');
         })
         .next()
-        .button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-document'
-            }
-        })
         .click(function() {
             alert( "This will implement the import from file" );
         })
-		.css('margin-left', '-1px')
-        .parent()
-        .buttonset();
+		.css('margin-left', '-1px');
     
 	//setting more options button
 	$('div.more-options')
-        .button({
-            text: false,
-            icons: {
-                primary: 'ui-icon-circle-plus'
-            }
-        })
 		.hover(function(){
 				$(this)
 					.prev()
@@ -168,9 +140,7 @@ $(function(){
 					.next()
 					.removeClass('ui-state-hover');
 			}
-		)
-		.parent()
-		.addClass('ui-widget');
+		);
 	
     var update_urls_table = function(){
         $('div.main table').show();
@@ -193,7 +163,7 @@ $(function(){
                     $('table>tbody>tr:last>td:has(a) a').ellipsis({size: 40, expand: false});
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)
-                        .addClass('ui-icon ui-icon-circle-close')
+                        .html('X')
                         .parent()
                         .click(function(){
                             $.ajax({
@@ -250,10 +220,6 @@ $(function(){
         //password is in window.localStorage.pass
         //setting submit to logout
         $('header form: input:submit').val('LogOut');
-        $('div.new-url-btn')
-            .button('option', 'disabled', false)
-            .next()
-            .button('option', 'disabled', false);
 
         $('div.login-box input').hide();
         $('div.pass-box input').hide();
@@ -267,10 +233,6 @@ $(function(){
         
 	} else {
         //handling submit of the form
-        $('div.new-url-btn, div.new-url-btn')
-            .button('option', 'disabled', true)
-            .next()
-            .button('option', 'disabled', true);
         $('div.login-box input').show();
         $('div.pass-box input').show();
 
@@ -294,10 +256,6 @@ $(function(){
                             $('header form').unbind('submit');
                             $('header form').submit(logout);
 
-                            $('div.new-url-btn')
-                                .button('option', 'disabled', false)
-                                .next()
-                                .button('option', 'disabled', false);                            
                             //fetching resuts
                             update_urls_table();
                             setInterval(update_urls_table, 300000);
