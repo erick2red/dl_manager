@@ -9,7 +9,7 @@ small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
+table, caption, tbody, tfoot, thead, tr, th, td, input {
 	background: transparent;
 	border: 0;
 	margin: 0;
@@ -99,7 +99,9 @@ header div, header form {
 
 div.main {
     clear: both;
-	width: 85%;
+	width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 	background: white;
 	padding: 0 30px 30px 30px;
 }
@@ -194,16 +196,21 @@ div.new-url-dialog {
     padding: 2em;
     padding-top: 1.8em;
     padding-right: 1em;
-    width: 80%;
+    width: 85%;
 
     background: rgba(184,243,85,0.3);
     border: 1px solid grey;
     border-radius: 10px;
     -moz-border-radius: 10px;
     display: none;
+    
+    height: 4em;
 }
 
-div.new-url {
+span.new-url {
+    margin-right: 2em;
+    padding: 5px;
+    float: left;
     background: rgba(144, 144, 144, 0.15);
     border: 1px solid white;
     border-radius: 10px;
@@ -211,20 +218,12 @@ div.new-url {
 	display: inline-block;
 }
 
-div.new-url * {
-	vertical-align: middle;
-}
-
-input.new-url, div.more-options {
+input.new-url, div.more-options, input#bwlimit {
 	display: inline-block;
 	padding: .9em .4em;
     
-	cursor: pointer;
-    line-height: 1.4em;
+	line-height: 1.4em;
     padding: .4em 1em;
-    
-    border-radius: 0.4em;
-    -moz-border-radius: 0.4em;
     
     background: #F6F6F6 50% 50% repeat-x;
     border: 2px solid black;
@@ -232,14 +231,38 @@ input.new-url, div.more-options {
     font-size: 0.8em;    
 }
 
+span.one-option {
+    margin: 8px;
+    display: inline-block;
+}
+
+span.one-option label {
+    padding-right: 2em;
+}
+
+input#bwlimit {
+    border-radius: 10px;
+	-moz-border-radius: 10px;
+    width: 2em;
+}
+
 input.new-url {
+    width: 40em;
     border-radius: 10px 0 0 10px;
 	-moz-border-radius: 10px 0 0 10px;
 }
 
 div.more-options {
+    cursor: pointer;
+    margin-left: -8px;
     border-radius: 0 10px 10px 0;
 	-moz-border-radius: 0 10px 10px 0;
+}
+
+span.buttons {
+    padding: 5px;
+    float: right;
+    border: 1px solid transparent;
 }
 
 div.new-url-ok, div.new-url-cancel {

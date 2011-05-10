@@ -1,4 +1,5 @@
 var parse_url = /^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+var parse_number = /^\d+$/;
 
 $(function(){
 	//setting drag'n'drop
@@ -65,16 +66,19 @@ $(function(){
 	dropZone.addEventListener('dragover', handleDragOver, false);
 	dropZone.addEventListener('drop', handleFileSelect, false);
   
-    //styling
+    //adding new url method
     $('div.new-url-ok')
         .click(function(){
             n_url = $('input.new-url').val();
+            n_bw_limit = $('input#bwlimit').val();
+            console.log(n_bw_limit);
+            console.log(parse_number.test(n_bw_limit) ? parseInt(n_bw_limit) : 0);
             if(parse_url.test(n_url)) {
                 //calling ajax
                 $.ajax({
                     url: 'cgi/handler.php',
                     type: 'POST',
-                    data: {method: 'new_url', params: {user_id: window.localStorage.user_id, url: n_url}},
+                    data: {method: 'new_url', params: {user_id: window.localStorage.user_id, url: n_url, bw_limit: parse_number.test(n_bw_limit) ? parseInt(n_bw_limit) : 0 }},
                     dataType: 'json',
                     success: function(data, textStatus, jqXHR){
                         if(data) {
@@ -86,6 +90,8 @@ $(function(){
                     }
                 });
                 $('input.new-url').val("");
+                $('input#bwlimit').val("");
+                $('div.other-options').hide();
             } else {
                 $('body').toastmessage('showToast', {
                    text: 'Invalid Url',
@@ -116,31 +122,9 @@ $(function(){
     
 	//setting more options button
 	$('div.more-options')
-		.hover(function(){
-				$(this)
-					.prev()
-					.css('border-color', '#999999');
-			},function(){
-				$(this)
-					.prev()
-					.css('border-color', 'lightGrey');
-			})
 		.click(function(){
-			$('div.other-options').slideDown('fast');
-		})
-		.prev()
-		.hover(function(){
-				$(this)
-					.css('border-color', '#999999')
-					.next()
-					.addClass('ui-state-hover');
-			},function(){
-				$(this)
-					.css('border-color', 'lightGrey')
-					.next()
-					.removeClass('ui-state-hover');
-			}
-		);
+			$('div.other-options').slideToggle('fast');
+		});
 	
     var update_urls_table = function(){
         $('div.main table').show();
@@ -163,7 +147,7 @@ $(function(){
                     $('table>tbody>tr:last>td:has(a) a').ellipsis({size: 40, expand: false});
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)
-                        .html('X')
+                        .html('<img src="images/delete.png" alt="Del" />')
                         .parent()
                         .click(function(){
                             $.ajax({
@@ -178,7 +162,7 @@ $(function(){
                                 }
                             });
                         })
-                        .css('padding-left', '42px');
+                        .css('padding-top', '6px');
                     data[i].status == 'done' && rate++; total_size += data[i].size;
                 }
                 $('table').append('<tfoot><td></td><td>'+ rate + '/' + data.length + '</td><td>' + total_size + 'MB</td><td></td></tfoot>');

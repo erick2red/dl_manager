@@ -32,6 +32,8 @@ class Receiver {
 		} catch (Exception $e) {
 			echo 'Caught exception: ',  $e->getMessage(), "\n";
 		}
+		
+		$this->logger = fopen('/tmp/logs.txt', 'a+');
 	}
 	
 	function authenticate_user($params) {
@@ -50,7 +52,10 @@ class Receiver {
 	}
 	function new_url($params) {
 		$file = substr($params['url'], strrpos($params['url'], '/') + 1);
-		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', 0, "' . $params['url'] . '", "' . $file . '", 0, 0)';
+		$sql = 'INSERT INTO urls VALUES(NULL, ' . $params['user_id'] . ', 0, "' . $params['url'] . '", "' . $file . '", 0, ' . $params['bw_limit'] . ')';
+		if($this->logger != FALSE) {
+			fwrite($this->logger, $sql);
+		}
 		if($this->database->query($sql)) {
 			return true;
 		}
