@@ -72,6 +72,14 @@ class Receiver {
 		}
 		return false;
 	}
+	
+	function clear($params) {
+		$sql = 'DELETE FROM urls';
+		if($this->database->query($sql)) {
+			return true;
+		}
+		return false;
+	}
 }
 
 $obj = new Receiver();

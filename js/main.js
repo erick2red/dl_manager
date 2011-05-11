@@ -2,8 +2,43 @@ var parse_url = /^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-
 var parse_number = /^\d+$/;
 
 $(function(){
+    $('div.footer-tray')
+        .click(function(){
+            $('footer').slideToggle('fast', function(){
+                if($('footer').css('display') == 'none') {
+                    $('div.footer-tray')
+                        .css('bottom', '5px')
+                        .css('-webkit-transform', '')
+                        .css('-moz-transform', '');
+                } else {
+                    $('div.footer-tray')
+                        .css('bottom', '10px')
+                        .css('-webkit-transform', 'rotate(180deg)')
+                        .css('-moz-transform', 'rotate(180deg)');
+                }
+            });
+        });
+    
+    $('div.clear-all')
+        .click(function(){
+                $.ajax({
+                    url: 'cgi/handler.php',
+                    type: 'POST',
+                    data: {method: 'clear', params: {}},
+                    dataType: 'json',
+                    success: function(data, textStatus, jqXHR){
+                        if(data) {
+                            update_urls_table();
+                        } else {
+                            //let see
+                        }
+                    }
+                });
+        });
+    
 	//setting drag'n'drop
 	var handleFileSelect = function(evt) {
+        $('div.new-url-file').css('opacity', '1');
 		evt.stopPropagation();
 		evt.preventDefault();
 		
@@ -18,7 +53,6 @@ $(function(){
 				reader.onload = function(evt) {
 					// Obtain the read file data
 					fileString = evt.target.result;
-					alert('Processed\n' + fileString);
 					lines = fileString.split('\n');
 					var urls = new Array();
 					for(j = 0; j < lines.length; j++) {
@@ -31,7 +65,7 @@ $(function(){
 								async: false,
 								url: 'cgi/handler.php',
 								type: 'POST',
-								data: {method: 'new_url', params: {user_id: window.localStorage.user_id, url: lines[j]}},
+								data: {method: 'new_url', params: {user_id: window.localStorage.user_id, url: lines[j], bw_limit: 0}},
 								dataType: 'json',
 								success: function(data, textStatus, jqXHR){
 									if(data) {
@@ -49,14 +83,14 @@ $(function(){
 				
 				reader.readAsText(f, "UTF-8");
 			} else {
-				alert('Won\'t process this file \'cause of the type: ' + f.type);
+				alert('Won\'t process this file beacusecause of the type of the file ' + f.type);
 			}
 		}
 	}
 	
 	var handleDragOver = function(evt) {
 		console.log(evt);
-		$('div.new-url-file').css('border', '2px solid black');
+		$('div.new-url-file').css('opacity', '0.5');
 		evt.stopPropagation();
 		evt.preventDefault();
 	}
@@ -143,7 +177,7 @@ $(function(){
                 for(i in data) {
 					address = data[i].status == '100' ? data[i].address.substr(data[i].address.lastIndexOf('/') + 1).link(escape(data[i].address)) : '-';
                     $('table>tbody').append('<tr><td>' + data[i].url + '</td><td>' + data[i].status + '</td><td>' + address + '</td><td><div class="btn-remove" id="url_' + data[i].url_id + '">Remove</div></td></tr>')
-                    $('table>tbody>tr:last>td:first').ellipsis({size: 45, expand: false});
+                    $('table>tbody>tr:last>td:first').ellipsis({size: 80, expand: false});
                     $('table>tbody>tr:last>td:has(a) a').ellipsis({size: 40, expand: false});
                     //adding remove button
                     $('td>div#url_' + data[i].url_id)

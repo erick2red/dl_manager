@@ -79,7 +79,7 @@ header div.left-side {
     float: right;
 }
 
-header form input, header div.new-url-btn, header div.new-url-file {
+header form input, header div.new-url-btn, header div.new-url-file, footer div.clear-all {
 	cursor: pointer;
     line-height: 1.4em;
     padding: .4em 1em;
@@ -284,6 +284,34 @@ div.new-url-ok, div.new-url-cancel {
 
 div.other-options {
 	display: none;	
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 2em;
+    left: 0;
+    right: 0;
+
+    background: #eeeeee; /* old browsers */
+background: -moz-linear-gradient(top, #eeeeee 0%, #eeeeee 100%); /* firefox */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#eeeeee)); /* webkit */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#eeeeee',GradientType=0 ); /* ie */
+    
+    padding: .2em 3em;
+    
+    display: none;
+}
+
+div.footer-tray {
+    position: fixed;
+    bottom: 5px;
+    left: 16px;
+}
+
+footer div.clear-all {
+    display: inline-block;
 }
 
 /* styling links */
